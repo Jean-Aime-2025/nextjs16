@@ -14,6 +14,23 @@ interface PostIdProps {
   }>;
 }
 
+export async function generateMetadata({ params }: PostIdProps) {
+  const { postId } = await params;
+  const post = await fetchQuery(api.posts.getPostById, { postId: postId });
+
+  if(!post){
+    return {
+      title: 'Post not found',
+      description: 'The requested post does not exist.',
+    };
+  }
+  
+  return {
+    title: post.title,
+    description: post.body,
+  };
+}
+
 const BlogDetails = async ({ params }: PostIdProps) => {
   const { postId } = await params;
 

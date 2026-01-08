@@ -11,8 +11,10 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: 'Next.js 16',
-  description: 'Next.js 16',
+  title: 'Blog | Next.js 16',
+  description: 'A blog platform built with Next.js 16 and Convex',
+  category:'Web development',
+  authors: [{ name: 'Jean Aime', url: 'https://www.linkedin.com/in/mugabe-jean-aime-126445256/' }],
 };
 
 export default function RootLayout({
