@@ -5,7 +5,10 @@ import { api } from '@/convex/_generated/api';
 import { fetchQuery } from 'convex/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Suspense } from 'react';
+import { Suspense } from 'react'; 
+
+export const dynamic = 'force-static'
+export const revalidate = 30
 
 const BlogPage = async () => {
   return (
