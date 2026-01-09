@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { createBlogArticle } from '@/app/actions';
@@ -23,6 +24,7 @@ import { Loader2 } from 'lucide-react';
 import { useTransition } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
+import { UploadCloud, X } from 'lucide-react';
 
 const CreatePage = () => {
   const [isPending, startTransition] = useTransition();
@@ -32,7 +34,7 @@ const CreatePage = () => {
     defaultValues: {
       title: '',
       content: '',
-      image: undefined
+      image: undefined,
     },
   });
 
@@ -99,25 +101,78 @@ const CreatePage = () => {
               <Controller
                 name="image"
                 control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field>
-                    <FieldLabel>Image</FieldLabel>
-                    <Input
-                      onChange={(e)=>{
-                        const file = e.target.files?.[0]
-                        field.onChange(file)
-                      }}
-                      type="file"
-                      accept="image/*"
-                      aria-invalid={fieldState.invalid}
-                      placeholder='Image'
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
+                render={({ field, fieldState }) => {
+                  const file = field.value as File | undefined;
+                  const preview = file ? URL.createObjectURL(file) : null;
+
+                  return (
+                    <Field>
+                      <FieldLabel>Cover Image</FieldLabel>
+
+                      <div
+                        className={`
+                          relative flex flex-col items-center justify-center
+                          border-2 border-dashed rounded-xl p-6
+                          transition cursor-pointer
+                          ${
+                            fieldState.invalid
+                              ? 'border-destructive'
+                              : 'border-muted-foreground/30 hover:border-primary'
+                          }
+                        `}
+                      >
+                        {/* Hidden input */}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="absolute inset-0 opacity-0 cursor-pointer"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            field.onChange(file);
+                          }}
+                        />
+
+                        {/* Preview */}
+                        {preview ? (
+                          <div className="relative w-full">
+                            <img
+                              src={preview}
+                              alt="Preview"
+                              className="h-48 w-full object-contain rounded-lg"
+                            />
+
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                field.onChange(undefined);
+                              }}
+                              className="absolute top-2 right-2 bg-black/60 text-white rounded-full p-1 hover:bg-black"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          </div>
+                        ) : (
+                          <>
+                            <UploadCloud className="h-10 w-10 text-muted-foreground mb-2" />
+                            <p className="text-sm text-muted-foreground">
+                              Click to upload or drag & drop
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              PNG, JPG, WEBP (max 5MB)
+                            </p>
+                          </>
+                        )}
+                      </div>
+
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  );
+                }}
               />
+
               <Button
                 disabled={isPending}
                 type="submit"
