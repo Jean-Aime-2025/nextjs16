@@ -5,10 +5,11 @@ import { api } from '@/convex/_generated/api';
 import { fetchQuery } from 'convex/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
+import { connection } from 'next/server';
 import { Suspense } from 'react'; 
 
-export const dynamic = 'force-static'
-export const revalidate = 30
+// export const dynamic = 'force-static'
+// export const revalidate = 30
 
 const BlogPage = async () => {
   return (
@@ -31,7 +32,7 @@ const BlogPage = async () => {
 export default BlogPage;
 
 async function LoadingBlogList() {
-  await new Promise((resolve) => setTimeout(resolve, 5000));
+  await connection()
   const data = await fetchQuery(api.posts.getPosts);
 
   return (
