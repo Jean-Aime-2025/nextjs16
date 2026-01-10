@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'deafening-rabbit-378.convex.cloud',
+        hostname: 'befitting-labrador-684.convex.cloud',
       },
     ],
   },
